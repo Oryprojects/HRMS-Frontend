@@ -1,4 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const hostname = window.location.hostname;
+const BASE_URL = (hostname === 'localhost' || hostname === '127.0.0.1')
+    ? "http://localhost:8080"
+    : "";
 
 const api = async (endpoint, options = {}) => {
     const token = localStorage.getItem("token");

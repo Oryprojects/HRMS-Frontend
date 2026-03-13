@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginBG from '../../assets/Color-blur-abstract-background-vector.jpg';
 import Logo from '../../assets/ORYFOLKS-logo.png';
+import api from '../../utils/api';
 
 const LoginPage = ({ setUser }) => {
   const [username, setUsername] = useState('');
@@ -16,9 +17,8 @@ const LoginPage = ({ setUser }) => {
     console.log("🔵 Login started");
 
     try {
-      const loginRes = await fetch("http://localhost:8080/login", {
+      const loginRes = await api("/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
@@ -35,9 +35,7 @@ const LoginPage = ({ setUser }) => {
 
       console.log("🔵 Calling /me");
 
-      const meRes = await fetch("http://localhost:8080/me", {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
+      const meRes = await api("/me");
 
       console.log("🟢 /me response:", meRes.status);
 
@@ -60,26 +58,19 @@ const LoginPage = ({ setUser }) => {
 
       // Try to fetch employee details to get the name and employeeId
       try {
-        const empRes = await fetch("http://localhost:8080/me/employee", {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
+        const empRes = await api("/me/employee");
         if (empRes.ok) {
           const empJson = await empRes.json();
           const empData = empJson.data || empJson;
           if (empData) {
             if (empData.id) {
-              //user.employeeId = empData.id;
               normalizedUser.employeeId = empData.id;
             }
             if (empData.firstName) {
-              // user.firstName = empData.firstName;
-              // user.lastName = empData.lastName;
-              // user.fullName = `${empData.firstName} ${empData.lastName}`;
               normalizedUser.firstName = empData.firstName;
               normalizedUser.lastName = empData.lastName;
               normalizedUser.fullName = `${empData.firstName} ${empData.lastName}`;
               normalizedUser.designation = empData.designation;
-
             }
           }
         }
@@ -87,8 +78,6 @@ const LoginPage = ({ setUser }) => {
         console.warn("Could not fetch employee profile for details", ignore);
       }
 
-      // localStorage.setItem("user", JSON.stringify(user));
-      // setUser(user);
       localStorage.setItem("user", JSON.stringify(normalizedUser));
       setUser(normalizedUser);
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../utils/api";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -18,8 +19,8 @@ const ForgotPassword = () => {
     setMessage("");
 
     try {
-      const res = await fetch(
-        `http://localhost:8080/auth/forgot-password?email=${email}`,
+      const res = await api(
+        `/auth/forgot-password?email=${email}`,
         {
           method: "POST",
         }
@@ -43,8 +44,8 @@ const ForgotPassword = () => {
     setMessage("");
 
     try {
-      const res = await fetch(
-        `http://localhost:8080/auth/verify-otp?email=${email}&otp=${otp}`,
+      const res = await api(
+        `/auth/verify-otp?email=${email}&otp=${otp}`,
         {
           method: "POST",
         }
@@ -73,8 +74,8 @@ const ForgotPassword = () => {
     }
 
     try {
-      const res = await fetch(
-        `http://localhost:8080/auth/reset-password?email=${email}&otp=${otp}&newPassword=${newPassword}`,
+      const res = await api(
+        `/auth/reset-password?email=${email}&otp=${otp}&newPassword=${newPassword}`,
         {
           method: "POST",
         }
